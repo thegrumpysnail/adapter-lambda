@@ -13,7 +13,7 @@ const expected = new Set([
 ]);
 
 if (ENV_PREFIX) {
-  for (const name in process.env) {
+  for (const name of Object.keys(process.env)) {
     if (name.startsWith(ENV_PREFIX)) {
       const unprefixed = name.slice(ENV_PREFIX.length);
       if (!expected.has(unprefixed)) {
@@ -28,6 +28,8 @@ if (ENV_PREFIX) {
 /**
  * @param {string} name
  * @param {any} fallback
+ *
+ * @returns {any}
  */
 export const env = (name, fallback) => {
   const prefixed = ENV_PREFIX + name;
@@ -36,3 +38,5 @@ export const env = (name, fallback) => {
     ? process.env[prefixed]
     : fallback;
 };
+
+export default env;

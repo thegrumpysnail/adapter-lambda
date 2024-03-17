@@ -5,4 +5,6 @@ extends: airbnb-base
 parserOptions:
   ecmaVersion: latest
   sourceType: module
-rules: {}
+rules:
+  no-shadow: [ 'off' ]
+  no-restricted-syntax: [ 'off' ]

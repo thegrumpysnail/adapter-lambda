@@ -7,7 +7,7 @@ import path from 'node:path';
 import sirv from 'sirv';
 import { Readable } from 'stream';
 import { fileURLToPath } from 'node:url';
-import { parse as polka_url_parser } from '@polka/url';
+import { parse as parseUrl } from '@polka/url';
 import { getRequest } from '@sveltejs/kit/node';
 import { Server } from 'SERVER';
 import { manifest, prerendered } from 'MANIFEST';
@@ -18,11 +18,11 @@ import { env } from 'ENV';
 const server = new Server(manifest);
 await server.init({ env: process.env });
 const origin = env('ORIGIN', undefined);
-const xffDepth = parseInt(env('XFF_DEPTH', '1'));
+const xffDepth = parseInt(env('XFF_DEPTH', '1'), 10);
 const addressHeader = env('ADDRESS_HEADER', '').toLowerCase();
 const protocolHeader = env('PROTOCOL_HEADER', '').toLowerCase();
 const hostHeader = env('HOST_HEADER', 'host').toLowerCase();
-const bodySizeLimit = parseInt(env('BODY_SIZE_LIMIT', '524288'));
+const bodySizeLimit = parseInt(env('BODY_SIZE_LIMIT', '524288'), 10);
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -49,12 +49,14 @@ const serve = (path, isClient = false) => {
 };
 
 // required because the static file server ignores trailing slashes
-/** @returns {import('polka').Middleware} */
+/** @returns {import('express').RequestHandler} */
 const servePrerendered = () => {
   const handler = serve(path.join(dir, 'prerendered'));
 
   return (req, res, next) => {
-    let { pathname, search, query } = polka_url_parser(req);
+    const parsedUrl = parseUrl(req);
+    const { search, query } = parsedUrl;
+    let { pathname } = parsedUrl;
 
     try {
       pathname = decodeURIComponent(pathname);
@@ -67,7 +69,7 @@ const servePrerendered = () => {
     }
 
     // remove or add trailing slash as appropriate
-    const location = pathname.at(-1) === '/'
+    let location = pathname.at(-1) === '/'
       ? pathname.slice(0, -1)
       : `${pathname}/`;
 
@@ -80,9 +82,15 @@ const servePrerendered = () => {
     } else {
       next();
     }
+
+    return null;
   };
 };
 
+/**
+ * @param {import('express').Response} res
+ * @param {{ headers: any, status: number, body: any }} response
+ */
 const setResponse = async (res, response) => {
   const headers = Object.fromEntries(response.headers);
 
@@ -101,7 +109,7 @@ const setResponse = async (res, response) => {
 
 /**
  * @param {import('http').IncomingHttpHeaders} headers
- * @returns
+ * @returns {string}
  */
 const getOrigin = (headers) => {
   const protocol = (protocolHeader && headers[protocolHeader]) || 'https';
@@ -110,7 +118,7 @@ const getOrigin = (headers) => {
   return `${protocol}://${host}`;
 };
 
-/** @type {import('polka').Middleware} */
+/** @type {import('express').RequestHandler} */
 const ssr = async (req, res) => {
   const request = await getRequest({
     base: origin || getOrigin(req.headers),
@@ -167,13 +175,13 @@ const ssr = async (req, res) => {
   );
 };
 
-/** @param {import('polka').Middleware[]} handlers */
+/** @param {import('express').RequestHandler[]} handlers */
 const sequence = (handlers) => (
-  /** @type {import('polka').Middleware} */
+  /** @type {import('express').RequestHandler} */
   (req, res, next) => {
     /**
      * @param {number} i
-     * @returns {ReturnType<import('polka').Middleware>}
+     * @returns {ReturnType<import('express').RequestHandler>}
      */
     const handle = (i) => {
       if (i < handlers.length) {
@@ -195,3 +203,5 @@ export const handler = sequence(
     ssr,
   ].filter(Boolean),
 );
+
+export default handler;

@@ -68,6 +68,10 @@ Update your `package.json`.
 }
 ```
 
+## Caveats
+
+- Binary data within the static directory will not be resolved correctly.
+
 ## License
 
 [MIT](LICENSE)
