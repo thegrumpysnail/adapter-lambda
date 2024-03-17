@@ -1,6 +1,6 @@
 {
 	"name": "@thegrumpysnail/adapter-lambda",
-	"version": "0.1.1",
+	"version": "0.2.0",
 	"description": "Adapter for SvelteKit apps that generates a node service that can run in AWS",
 	"repository": {
 		"type": "git",
