@@ -12,6 +12,9 @@ import { getRequest } from '@sveltejs/kit/node';
 import { Server } from 'SERVER';
 import { manifest, prerendered } from 'MANIFEST';
 import { env } from 'ENV';
+import { mimes } from "mrmime";
+
+mimes["ico"] = "image/x-icon";
 
 /* global ENV_PREFIX */
 
@@ -109,6 +112,7 @@ const setResponse = async (res, response) => {
 
 /**
  * @param {import('http').IncomingHttpHeaders} headers
+ *
  * @returns {string}
  */
 const getOrigin = (headers) => {
@@ -156,6 +160,7 @@ const ssr = async (req, res) => {
                 } addresses`,
               );
             }
+
             return addresses[addresses.length - xffDepth].trim();
           }
 

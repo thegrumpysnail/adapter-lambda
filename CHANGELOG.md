@@ -1,5 +1,12 @@
 # @thegrumpysnail/adapter-lambda
 
+## 0.3.2
+
+### Patch Changes
+
+- Added mime support for .ico files
+- Updated documentation for handling binary files
+
 ## 0.3.0
 
 ### Patch Changes

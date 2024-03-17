@@ -1,6 +1,6 @@
 # @thegrumpysnail/adapter-lambda
 
-Based off of the [Node Server Adapter](https://kit.svelte.dev/docs/adapter-node) and designed to be used with [serverless](https://www.npmjs.com/package/serverless).
+Based off of the [Node Server Adapter](https://kit.svelte.dev/docs/adapter-node) and designed to be used with [serverless](https://www.npmjs.com/package/serverless). Some inspiration was also taken from [svelte-adapter-lambda](https://github.com/tessellator/sveltekit-adapter-lambda).
 
 ## Installation
 
@@ -43,8 +43,10 @@ const app = express();
 
 app.use(svelteHandler);
 
-export const handler = serverless(app);
-````
+export const handler = serverless(app, {
+  binary: [ 'image/*' ],
+});
+```
 
 Set up your `serverless.yml`.
 
@@ -67,10 +69,6 @@ Update your `package.json`.
   }
 }
 ```
-
-## Caveats
-
-- Binary data within the static directory will not be resolved correctly.
 
 ## License
 
