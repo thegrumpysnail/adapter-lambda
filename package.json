@@ -1,6 +1,6 @@
 {
 	"name": "@thegrumpysnail/adapter-lambda",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Adapter for SvelteKit apps that generates a node service that can run in AWS",
 	"repository": {
 		"type": "git",
@@ -26,7 +26,7 @@
 		"build": "node -e \"fs.rmSync('files', { force: true, recursive: true })\" && rollup -c",
 		"test": "echo \"tests temporarily disabled\" # c8 vitest run",
 		"check": "tsc",
-		"lint": "prettier --check .",
+		"lint": "eslint src/*",
 		"format": "pnpm lint --write",
 		"prepublishOnly": "pnpm build"
 	},
@@ -36,6 +36,9 @@
 		"@sveltejs/vite-plugin-svelte": "^3.0.1",
 		"@types/node": "^18.19.3",
 		"c8": "^9.0.0",
+		"eslint": "^8.57.0",
+		"eslint-config-airbnb-base": "^15.0.0",
+		"eslint-plugin-import": "^2.29.1",
 		"polka": "1.0.0-next.24",
 		"sirv": "^2.0.4",
 		"typescript": "^5.3.3",

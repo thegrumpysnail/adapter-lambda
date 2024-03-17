@@ -5,15 +5,6 @@ import { builtinModules } from 'node:module';
 
 export default [
 	{
-		input: 'src/index.js',
-		output: {
-			file: 'files/index.js',
-			format: 'esm'
-		},
-		plugins: [nodeResolve({ preferBuiltins: true }), commonjs(), json()],
-		external: ['ENV', 'HANDLER', ...builtinModules]
-	},
-	{
 		input: 'src/env.js',
 		output: {
 			file: 'files/env.js',
