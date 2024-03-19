@@ -5,7 +5,7 @@ Based off of the [Node Server Adapter](https://kit.svelte.dev/docs/adapter-node)
 ## Installation
 
 ```bash
-npm install --save @thegrumpysnail/adapter-lambda
+npm install --save-dev @thegrumpysnail/adapter-lambda
 
 npm install --save express serverless-http
 npm install --save-dev serverless
